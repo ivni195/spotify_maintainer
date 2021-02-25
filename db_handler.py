@@ -55,6 +55,31 @@ class DBHandler:
         """)
         return results.fetchall()
 
+    def get_table_info(self, table_name: str) -> tuple:
+        """:returns (downloaded songs, total songs)"""
+        table_name = self._escape_quotes(table_name)
+
+        total_result = self._connection.execute(f"""
+            SELECT * FROM {table_name};
+        """)
+        total = len(total_result.fetchall())
+
+        downloaded_result  = self._connection.execute(f"""
+            SELECT * FROM {table_name} WHERE DOWNLOADED=1
+        """)
+        downloaded = len(downloaded_result.fetchall())
+
+        return (downloaded, total)
+
+    def get_current_songs(self, table_name: str):
+        table_name = self._escape_quotes(table_name)
+        results = self._connection.execute(f"""
+            SELECT ARTIST, NAME FROM {table_name}
+        """)
+        return results.fetchall()
+
+
+
     def test_fetch(self):
         result = self._connection.execute('SELECT * FROM test;')
         print(result.fetchall())
