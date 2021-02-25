@@ -5,6 +5,9 @@ class DBHandler:
     def __init__(self):
         self._connection: sqlite3.Connection = self.connect_to_database()
 
+    def _escape_quotes(self, s: str):
+        return s.replace('"', '\\"').replace("'", "\\'")
+
     def connect_to_database(self) -> sqlite3.Connection:
         try:
             print('Succesfully opened the database.')
@@ -15,11 +18,13 @@ class DBHandler:
 
     def check_table_existance(self, table_name: str) -> bool:
         result = self._connection.execute(f"""
-        SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';
-        """)
+        SELECT name FROM sqlite_master WHERE type='table' AND name=?;
+        """, (table_name,))
         return result.fetchone() is not None
 
     def create_table(self, table_name: str):
+        table_name = self._escape_quotes(table_name)
+
         self._connection.execute(f"""
             CREATE TABLE '{table_name}'(
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,17 +35,21 @@ class DBHandler:
         """)
 
     def insert_record(self, table_name: str, artist: str, name: str):
+        table_name = self._escape_quotes(table_name)
+
         self._connection.execute(f"""
-            INSERT INTO '{table_name}' (ARTIST, NAME, DOWNLOADED)
-            VALUES ('{artist}', '{name}', 0);
-        """)
+            INSERT INTO {table_name} (ARTIST, NAME, DOWNLOADED) VALUES (?, ?, 0);
+        """, (artist, name))
 
     def mark_as_downloaded(self, table_name: str, id: int):
+        table_name = self._escape_quotes(table_name)
+
         self._connection.execute(f"""
-            UPDATE {table_name} SET DOWNLOADED=1 WHERE ID={id};
-        """)
+            UPDATE {table_name} SET DOWNLOADED=1 WHERE ID=?;
+        """, (id,))
 
     def find_all_not_downloaded(self, table_name: str) -> list:
+        table_name = self._escape_quotes(table_name)
         results = self._connection.execute(f"""
             SELECT * FROM {table_name} WHERE DOWNLOADED=0
         """)
