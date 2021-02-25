@@ -34,7 +34,7 @@ class DBHandler:
             );
         """)
 
-    def insert_record(self, table_name: str, artist: str, name: str):
+    def insert_song(self, table_name: str, artist: str, name: str):
         table_name = self._escape_quotes(table_name)
 
         self._connection.execute(f"""
@@ -71,18 +71,20 @@ class DBHandler:
 
         return (downloaded, total)
 
-    def get_current_songs(self, table_name: str):
+    def get_current_songs(self, table_name: str) -> list:
         table_name = self._escape_quotes(table_name)
         results = self._connection.execute(f"""
             SELECT ARTIST, NAME FROM {table_name}
         """)
         return results.fetchall()
 
+    def search_song(self, table_name: str, artist: str, name: str) -> bool:
+        table_name = self._escape_quotes(table_name)
+        result = self._connection.execute(f"""
+            SELECT * FROM {table_name} WHERE ARTIST=? AND NAME=?
+        """, (artist, name))
+        return result.fetchone() is not None
 
-
-    def test_fetch(self):
-        result = self._connection.execute('SELECT * FROM test;')
-        print(result.fetchall())
 
     def commit(self):
         self._connection.commit()
