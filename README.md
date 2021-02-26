@@ -1,7 +1,7 @@
 # spotify_maintainer
 ## Description
-Spotify_mainteiner is a script written in Python that
-lets you fetch playlists from your spotify
+Spotify_mainteiner is a script written 
+in Python that lets you fetch playlists 
 from your Spotify account and download them as mp3 files.
 It creates local database that stores information about which
 song has already been downloaded so that when you update your 
@@ -14,7 +14,7 @@ them using pip.
 `pip3 install youtube-dl spotipy`
 
 In addition `ffmpeg` is requiered. Install it by adding 
-its directory to `PATH`.
+its location to `PATH`.
 
 ## Install
 Simply download using git
@@ -35,3 +35,5 @@ the first step, you will be prompted to create the table.)
 
 Finally, download the songs. A new directory named 'example_playlist'
 will be created. This is where all downloaded songs will be stored.
+
+`python3 spfmaint.py download example_playlist`

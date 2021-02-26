@@ -56,7 +56,7 @@ class DBHandler:
         return results.fetchall()
 
     def get_table_info(self, table_name: str) -> tuple:
-        """:returns (downloaded songs, total songs)"""
+        """:return: (downloaded songs, total songs)"""
         table_name = self._escape_quotes(table_name)
 
         total_result = self._connection.execute(f"""
@@ -64,14 +64,14 @@ class DBHandler:
         """)
         total = len(total_result.fetchall())
 
-        downloaded_result  = self._connection.execute(f"""
+        downloaded_result = self._connection.execute(f"""
             SELECT * FROM {table_name} WHERE DOWNLOADED=1
         """)
         downloaded = len(downloaded_result.fetchall())
 
         return (downloaded, total)
 
-    def get_current_songs(self, table_name: str) -> list:
+    def get_all_songs(self, table_name: str) -> list:
         table_name = self._escape_quotes(table_name)
         results = self._connection.execute(f"""
             SELECT ARTIST, NAME FROM {table_name}
@@ -85,6 +85,11 @@ class DBHandler:
         """, (artist, name))
         return result.fetchone() is not None
 
+    def clear_table(self, table_name):
+        table_name = self._escape_quotes(table_name)
+        self._connection.execute(f"""
+            DELETE FROM {table_name};
+        """)
 
     def commit(self):
         self._connection.commit()
