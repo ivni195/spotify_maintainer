@@ -48,7 +48,7 @@ class DBHandler:
             UPDATE {table_name} SET DOWNLOADED=1 WHERE ID=?;
         """, (id,))
 
-    def find_all_not_downloaded(self, table_name: str) -> list:
+    def get_all_not_downloaded(self, table_name: str) -> list:
         table_name = self._escape_quotes(table_name)
         results = self._connection.execute(f"""
             SELECT * FROM {table_name} WHERE DOWNLOADED=0

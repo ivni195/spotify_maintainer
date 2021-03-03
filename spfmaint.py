@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-Spotify_mainteiner is a script written
+Spotify_maintainer is a script written
 in Python that lets you fetch playlists
 from your Spotify account and download them as mp3 files.
 It creates local database that stores information about which
@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
     # download songs marked as not downloaded
     elif args.action == 'download':
-        to_download = dbh.find_all_not_downloaded(args.playlist)
+        to_download = dbh.get_all_not_downloaded(args.playlist)
         ds = DownloadSession(args.threads, args.playlist, to_download, args.cookies)
 
         if len(to_download) > 0:
