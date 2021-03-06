@@ -1,6 +1,7 @@
 import youtube_dl
 import os
 import threading
+import re
 from math import ceil
 
 curr_dir = os.path.dirname(__file__)
@@ -26,6 +27,8 @@ class DownloadSession:
         :song should be a tuple of a form (id, artist, name, downloaded_flag)
         """
         idx, artist, name, _ = song
+        artist = re.sub(r'[^a-zA-Z0-9 ]', '', artist)
+        name = re.sub(r'[^a-zA-Z0-9 ]', '', name)
 
         # if playlist directory doesn't exist, create it
         try:
@@ -35,7 +38,7 @@ class DownloadSession:
 
         opts = {
             'default_search': 'auto',
-            'outtmpl': os.path.join(curr_dir, playlist, f'{artist} - {name}.webm'.replace('/', ' ')),
+            'outtmpl': os.path.join(curr_dir, playlist, f'{artist} - {name}.webm'),
             'format': 'bestaudio/best',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
