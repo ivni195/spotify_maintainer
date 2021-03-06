@@ -27,8 +27,9 @@ class DownloadSession:
         :song should be a tuple of a form (id, artist, name, downloaded_flag)
         """
         idx, artist, name, _ = song
-        artist = re.sub(r'[^a-zA-Z0-9 ]', '', artist)
-        name = re.sub(r'[^a-zA-Z0-9 ]', '', name)
+        regex = r'[$&+,:;=?@#|/\'<>.^*()%!-]'
+        artist = re.sub(regex, '', artist)
+        name = re.sub(regex, '', name)
 
         # if playlist directory doesn't exist, create it
         try:
