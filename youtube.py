@@ -35,7 +35,7 @@ class DownloadSession:
 
         opts = {
             'default_search': 'auto',
-            'outtmpl': os.path.join(curr_dir, playlist, f'{artist} - {name}.webm'),
+            'outtmpl': os.path.join(curr_dir, playlist, f'{artist} - {name}.webm'.replace('/', ' ')),
             'format': 'bestaudio/best',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
