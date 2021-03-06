@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     # if acting on a nonexistent table, prompt the user to create it
     if not dbh.check_table_existance(args.playlist):
-        print('Playlist not found. Do you want to create it?')
+        print('Table not found. Do you want to create it?')
         if ask_confirmation():
             dbh.create_table(args.playlist)
             print(f'Table {args.playlist} succesfully created.')
