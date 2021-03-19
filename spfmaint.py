@@ -102,6 +102,11 @@ if __name__ == '__main__':
     elif args.action == 'info':
         downloaded, total = dbh.get_table_info(args.playlist)
         print(f'Playlist {args.playlist}:\n{downloaded}/{total} songs already downloaded.')
+        if total - downloaded > 0:
+            print('Listing not downloaded songs:')
+            songs = [f'{artist} - {title}' for _, artist, title, _ in dbh.get_all_not_downloaded(args.playlist)]
+            print('\n'.join(songs))
+            print(f'Total of {total-downloaded}.')
 
     # manually add a song to a playlist by specyfying -a and -n
     elif args.action == 'add-song':
