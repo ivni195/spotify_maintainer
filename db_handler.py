@@ -5,9 +5,6 @@ class DBHandler:
     def __init__(self):
         self._connection: sqlite3.Connection = self.connect_to_database()
 
-    def _escape_quotes(self, s: str):
-        return s.replace('"', '\\"').replace("'", "\\'")
-
     def connect_to_database(self) -> sqlite3.Connection:
         try:
             print('Succesfully opened the database.')
@@ -23,8 +20,6 @@ class DBHandler:
         return result.fetchone() is not None
 
     def create_table(self, table_name: str):
-        table_name = self._escape_quotes(table_name)
-
         self._connection.execute(f"""
             CREATE TABLE '{table_name}'(
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,21 +30,18 @@ class DBHandler:
         """)
 
     def insert_song(self, table_name: str, artist: str, name: str):
-        table_name = self._escape_quotes(table_name)
 
         self._connection.execute(f"""
             INSERT INTO {table_name} (ARTIST, NAME, DOWNLOADED) VALUES (?, ?, 0);
         """, (artist, name))
 
     def mark_as_downloaded(self, table_name: str, id: int):
-        table_name = self._escape_quotes(table_name)
 
         self._connection.execute(f"""
             UPDATE {table_name} SET DOWNLOADED=1 WHERE ID=?;
         """, (id,))
 
     def get_all_not_downloaded(self, table_name: str) -> list:
-        table_name = self._escape_quotes(table_name)
         results = self._connection.execute(f"""
             SELECT * FROM {table_name} WHERE DOWNLOADED=0
         """)
@@ -57,7 +49,6 @@ class DBHandler:
 
     def get_table_info(self, table_name: str) -> tuple:
         """:return: (downloaded songs, total songs)"""
-        table_name = self._escape_quotes(table_name)
 
         total_result = self._connection.execute(f"""
             SELECT * FROM {table_name};
@@ -72,21 +63,18 @@ class DBHandler:
         return (downloaded, total)
 
     def get_all_songs(self, table_name: str) -> list:
-        table_name = self._escape_quotes(table_name)
         results = self._connection.execute(f"""
             SELECT ARTIST, NAME FROM {table_name}
         """)
         return results.fetchall()
 
     def search_song(self, table_name: str, artist: str, name: str) -> bool:
-        table_name = self._escape_quotes(table_name)
         result = self._connection.execute(f"""
             SELECT * FROM {table_name} WHERE ARTIST=? AND NAME=?
         """, (artist, name))
         return result.fetchone() is not None
 
     def clear_table(self, table_name):
-        table_name = self._escape_quotes(table_name)
         self._connection.execute(f"""
             DELETE FROM {table_name};
         """)

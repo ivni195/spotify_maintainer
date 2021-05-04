@@ -70,14 +70,14 @@ class DownloadSession:
             with self.lock:
                 self.failed += 1
 
-    def _download_chunk(self, playlist: str, chunk: list):
+    def _download_chunk(self, chunk: list):
         """
         Download all songs from chunk.
         This method is meant to be run in a seperate thread every time when called.
         """
         if len(chunk) > 0:
             for song in chunk:
-                self._download(playlist, song)
+                self._download(self.playlist, song)
 
     def start(self) -> list:
         """
@@ -89,7 +89,7 @@ class DownloadSession:
 
         threads = []
         for i in range(len(chunks)):
-            x = threading.Thread(target=self._download_chunk, args=(self.playlist, chunks[i]))
+            x = threading.Thread(target=self._download_chunk, args=(chunks[i],))
             threads.append(x)
             x.start()
             print(f'Starting thread {i}.')
